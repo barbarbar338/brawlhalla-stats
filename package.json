@@ -1,0 +1,90 @@
+{
+	"name": "brawlhalla-stats",
+	"author": {
+		"email": "demirci.baris38@gmail.com",
+		"name": "Barış DEMİRCİ",
+		"url": "https://bariscodes.me/"
+	},
+	"description": "See your brawlhalal stats instantly!",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/barbarbar338/brawlhalla-stats"
+	},
+	"license": "GPL-3.0",
+	"version": "0.0.1",
+	"private": true,
+	"devDependencies": {
+		"@craco/craco": "^6.1.1",
+		"@tailwindcss/postcss7-compat": "^2.1.0",
+		"@types/node": "^12.0.0",
+		"@types/react": "^17.0.0",
+		"@types/react-dom": "^17.0.0",
+		"@types/react-router-dom": "^5.1.7",
+		"autoprefixer": "^9",
+		"concurrently": "^6.0.1",
+		"cross-env": "^7.0.3",
+		"electron": "^12.0.2",
+		"electron-builder": "^22.10.5",
+		"postcss": "^7",
+		"react-scripts": "4.0.3",
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat",
+		"typescript": "^4.1.2",
+		"wait-on": "^5.3.0"
+	},
+	"dependencies": {
+		"@electron/remote": "^1.1.0",
+		"@tailwindcss/forms": "^0.3.2",
+		"auto-launch": "^5.0.5",
+		"electron-is-dev": "^2.0.0",
+		"electron-squirrel-startup": "^1.0.0",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-icons": "^4.2.0",
+		"react-router-dom": "^5.2.0",
+		"react-toastify": "^7.0.3",
+		"react-use": "^17.2.3"
+	},
+	"main": "public/main.js",
+	"homepage": "./",
+	"scripts": {
+		"react:build": "craco build",
+		"react:dev": "craco start",
+		"electron:build": "electron-builder -c.extraMetadata.main=build/main.js",
+		"electron:dev": "wait-on tcp:3000 && electron .",
+		"build": "npm run react:build && npm run electron:build",
+		"dev": "concurrently -k \"cross-env BROWSER=none npm run react:dev\" \"npm run electron:dev\""
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app",
+			"react-app/jest"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"build": {
+		"extends": null,
+		"appId": "com.barbarbar338.brawlhallastats",
+		"files": [
+			"dist/**/*",
+			"build/**/*",
+			"node_modules/**/*",
+			"package.json",
+			"build/icon.*"
+		],
+		"directories": {
+			"buildResources": "assets"
+		},
+		"icon": "./build/icon.ico"
+	}
+}
