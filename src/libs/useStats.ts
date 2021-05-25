@@ -9,7 +9,7 @@ export const useStats = (
 	const fetchStats = async (bhid: string): Promise<void> => {
 		setLoading(true);
 		const res = await fetch(
-			`https://brawlhalla-api.bariscodes.me/v1/stats/id?brawlhalla_id=${bhid}`,
+			`https://brawlhalla-api.herokuapp.com/v1/stats/id?brawlhalla_id=${bhid}`,
 		);
 		const body = await res.json();
 		setStats(body.data);
