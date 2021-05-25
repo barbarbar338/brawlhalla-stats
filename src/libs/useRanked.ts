@@ -13,7 +13,7 @@ export const useRanked = (
 	const fetchRanked = async (bhid: string): Promise<void> => {
 		setLoading(true);
 		const res = await fetch(
-			`https://brawlhalla-api.bariscodes.me/v1/ranked/id?brawlhalla_id=${bhid}`,
+			`https://brawlhalla-api.herokuapp.com/v1/ranked/id?brawlhalla_id=${bhid}`,
 		);
 		const body = await res.json();
 		setRanked(body.data);
