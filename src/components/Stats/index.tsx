@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FC } from "react";
 import {
 	IoAmericanFootballOutline,
@@ -11,8 +12,12 @@ import { useStats } from "../../libs/useStats";
 
 export const Stats: FC = () => {
 	const [credentials] = useCredentials();
-	const [loading, stats, fetchStats] = useStats(credentials?.bhid);
-	const date = useDate(stats?.lastSynced || Date.now());
+	const { isValidating, data, revalidate } = useStats(credentials!.bhid);
+	const date = useDate(data?.lastSynced || Date.now());
+
+	useEffect(() => {
+		console.log(data);
+	});
 
 	return (
 		<div className="container mx-auto px-6 py-8">
@@ -20,11 +25,11 @@ export const Stats: FC = () => {
 				Stats{" "}
 				<button
 					className="focus:outline-none text-white py-1 px-3 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-					onClick={fetchStats}
+					onClick={revalidate}
 				>
-					{loading ? "Syncing" : "Sync"}
+					{isValidating ? "Syncing" : "Sync"}
 				</button>{" "}
-				{!loading && (
+				{!isValidating && (
 					<span className="text-xs">(Last Sync: {date})</span>
 				)}
 			</h3>
@@ -37,7 +42,7 @@ export const Stats: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : stats?.games}
+									{isValidating ? "Loading" : data?.games}
 								</h4>
 								<div className="text-gray-500">Games</div>
 							</div>
@@ -50,14 +55,14 @@ export const Stats: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : stats?.wins}
+									{isValidating ? "Loading" : data?.wins}
 								</h4>
 								<div className="text-gray-500">
 									Wins{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 * stats!.wins) /
-											stats!.games
+											(100 * data!.wins) /
+											data!.games
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -70,17 +75,16 @@ export const Stats: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading
+									{isValidating
 										? "Loading"
-										: stats!.games - stats!.wins}
+										: data!.games - data!.wins}
 								</h4>
 								<div className="text-gray-500">
 									Loses{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 *
-												(stats!.games - stats!.wins)) /
-											stats!.games
+											(100 * (data!.games - data!.wins)) /
+											data!.games
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -93,12 +97,12 @@ export const Stats: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : stats?.level}
+									{isValidating ? "Loading" : data?.level}
 								</h4>
 								<div className="text-gray-500">
 									Level{" "}
-									{!loading &&
-										`(${stats!.xp_percentage.toFixed()}%)`}
+									{!isValidating &&
+										`(${data!.xp_percentage.toFixed()}%)`}
 								</div>
 							</div>
 						</div>

@@ -11,8 +11,8 @@ import { useGlory } from "../../libs/useGlory";
 
 export const Glory: FC = () => {
 	const [credentials] = useCredentials();
-	const [loading, glory, fetchGlory] = useGlory(credentials?.bhid);
-	const date = useDate(glory?.lastSynced || Date.now());
+	const { isValidating, data, revalidate } = useGlory(credentials!.bhid);
+	const date = useDate(data?.lastSynced || Date.now());
 
 	return (
 		<div className="container mx-auto px-6 py-8">
@@ -20,11 +20,11 @@ export const Glory: FC = () => {
 				Glory{" "}
 				<button
 					className="focus:outline-none text-white py-1 px-3 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-					onClick={fetchGlory}
+					onClick={revalidate}
 				>
-					{loading ? "Syncing" : "Sync"}
+					{isValidating ? "Syncing" : "Sync"}
 				</button>{" "}
-				{!loading && (
+				{!isValidating && (
 					<span className="text-xs">(Last Sync: {date})</span>
 				)}
 			</h3>
@@ -37,10 +37,9 @@ export const Glory: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading
+									{isValidating
 										? "Loading"
-										: glory!.glory.wins +
-										  glory!.glory.rating}
+										: data!.glory.wins + data!.glory.rating}
 								</h4>
 								<div className="text-gray-500">
 									Estimated Glory
@@ -55,15 +54,17 @@ export const Glory: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : glory!.glory.wins}
+									{isValidating
+										? "Loading"
+										: data!.glory.wins}
 								</h4>
 								<div className="text-gray-500">
 									Wins{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 * glory!.glory.wins) /
-											(glory!.glory.wins +
-												glory!.glory.rating)
+											(100 * data!.glory.wins) /
+											(data!.glory.wins +
+												data!.glory.rating)
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -76,15 +77,17 @@ export const Glory: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : glory!.glory.rating}
+									{isValidating
+										? "Loading"
+										: data!.glory.rating}
 								</h4>
 								<div className="text-gray-500">
 									Rating{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 * glory!.glory.rating) /
-											(glory!.glory.wins +
-												glory!.glory.rating)
+											(100 * data!.glory.rating) /
+											(data!.glory.wins +
+												data!.glory.rating)
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -97,7 +100,7 @@ export const Glory: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : glory?.eloReset}
+									{isValidating ? "Loading" : data?.eloReset}
 								</h4>
 								<div className="text-gray-500">ELO Reset</div>
 							</div>

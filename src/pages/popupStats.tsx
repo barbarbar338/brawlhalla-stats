@@ -15,7 +15,7 @@ export const PopupStatsPage: FC = () => {
 	}, [credentials]);
 
 	const onAPIClick = () => {
-		shell.openExternal("https://brawlhalla.bariscodes.me/");
+		shell.openExternal("https://brawlhalla.vercel.app/");
 	};
 
 	return redirect ? (

@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Layout } from "../components/Layout";
+import { API_URL } from "../libs/config";
 import { useCredentials } from "../libs/useCredentials";
 
 export const IndexPage: FC = () => {
@@ -21,9 +22,7 @@ export const IndexPage: FC = () => {
 		if (!id) return toast.error("Specify a Brawlhalla user ID");
 		if (isNaN(parseInt(id))) return toast.error("ID must be a number");
 		setLoading(true);
-		const res = await fetch(
-			`https://brawlhalla-api.bariscodes.me/v1/stats/id?brawlhalla_id=${id}`,
-		);
+		const res = await fetch(`${API_URL}/v1/stats/id?brawlhalla_id=${id}`);
 		const body = await res.json();
 		setCheckID(body.data.brawlhalla_id);
 		setCheckName(body.data.name);

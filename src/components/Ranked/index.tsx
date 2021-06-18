@@ -11,8 +11,8 @@ import { useRanked } from "../../libs/useRanked";
 
 export const Ranked: FC = () => {
 	const [credentials] = useCredentials();
-	const [loading, ranked, fetchRanked] = useRanked(credentials?.bhid);
-	const date = useDate(ranked?.lastSynced || Date.now());
+	const { isValidating, data, revalidate } = useRanked(credentials!.bhid);
+	const date = useDate(data?.lastSynced || Date.now());
 
 	return (
 		<div className="container mx-auto px-6 py-8">
@@ -20,11 +20,11 @@ export const Ranked: FC = () => {
 				Ranked{" "}
 				<button
 					className="focus:outline-none text-white py-1 px-3 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
-					onClick={fetchRanked}
+					onClick={revalidate}
 				>
-					{loading ? "Syncing" : "Sync"}
+					{isValidating ? "Syncing" : "Sync"}
 				</button>{" "}
-				{!loading && (
+				{!isValidating && (
 					<span className="text-xs">(Last Sync: {date})</span>
 				)}
 			</h3>
@@ -37,10 +37,10 @@ export const Ranked: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : ranked?.games}
+									{isValidating ? "Loading" : data?.games}
 								</h4>
 								<div className="text-gray-500">
-									Games {!loading && `(${ranked?.tier})`}
+									Games {!isValidating && `(${data?.tier})`}
 								</div>
 							</div>
 						</div>
@@ -52,14 +52,14 @@ export const Ranked: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : ranked?.wins}
+									{isValidating ? "Loading" : data?.wins}
 								</h4>
 								<div className="text-gray-500">
 									Wins{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 * ranked!.wins) /
-											ranked!.games
+											(100 * data!.wins) /
+											data!.games
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -72,18 +72,16 @@ export const Ranked: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading
+									{isValidating
 										? "Loading"
-										: ranked!.games - ranked!.wins}
+										: data!.games - data!.wins}
 								</h4>
 								<div className="text-gray-500">
 									Loses{" "}
-									{!loading &&
+									{!isValidating &&
 										`(${(
-											(100 *
-												(ranked!.games -
-													ranked!.wins)) /
-											ranked!.games
+											(100 * (data!.games - data!.wins)) /
+											data!.games
 										).toFixed()}%)`}
 								</div>
 							</div>
@@ -96,12 +94,12 @@ export const Ranked: FC = () => {
 							</div>
 							<div className="mx-5">
 								<h4 className="text-2xl font-semibold text-gray-700">
-									{loading ? "Loading" : ranked?.rating}
+									{isValidating ? "Loading" : data?.rating}
 								</h4>
 								<div className="text-gray-500">
 									ELO{" "}
-									{!loading &&
-										`(Peak: ${ranked?.peak_rating})`}
+									{!isValidating &&
+										`(Peak: ${data?.peak_rating})`}
 								</div>
 							</div>
 						</div>
@@ -133,7 +131,7 @@ export const Ranked: FC = () => {
 								</tr>
 							</thead>
 							<tbody className="bg-white">
-								{loading ? (
+								{isValidating ? (
 									<tr>
 										<td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
 											Loading
@@ -152,7 +150,7 @@ export const Ranked: FC = () => {
 										</td>
 									</tr>
 								) : (
-									ranked?.["2v2"]
+									data?.["2v2"]
 										.sort((a, b) => b.rating - a.rating)
 										.map((team, idx) => (
 											<tr key={idx}>
@@ -212,7 +210,7 @@ export const Ranked: FC = () => {
 								</tr>
 							</thead>
 							<tbody className="bg-white">
-								{loading ? (
+								{isValidating ? (
 									<tr>
 										<td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
 											Loading
@@ -231,7 +229,7 @@ export const Ranked: FC = () => {
 										</td>
 									</tr>
 								) : (
-									ranked?.legends
+									data?.legends
 										.sort((a, b) => b.rating - a.rating)
 										.map((legend, idx) => (
 											<tr key={idx}>
